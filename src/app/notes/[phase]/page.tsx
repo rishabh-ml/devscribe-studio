@@ -9,6 +9,25 @@ interface PhasePageProps {
   params: Promise<{ phase: string }>;
 }
 
+export async function generateMetadata({ params }: PhasePageProps) {
+  const { phase: phaseSlug } = await params;
+  const notes = getNotesByPhase(phaseSlug);
+  if (notes.length === 0) return {};
+
+  const overview = notes.find((n) => n.slug.includes("overview"));
+  const phaseNumber = notes[0].phase;
+  const title = overview?.title || `Phase ${phaseNumber}`;
+
+  return {
+    title,
+    description: `Phase ${phaseNumber} of JavaScript mastery: ${title}. ${notes.length} in-depth notes covering ${notes.map((n) => n.title).slice(1, 4).join(", ")}${notes.length > 4 ? ", and more" : ""}.`,
+    openGraph: {
+      title: `${title} | DevScribe`,
+      description: `Phase ${phaseNumber}: ${notes.length} structured notes for deep JavaScript learning.`,
+    },
+  };
+}
+
 export async function generateStaticParams() {
   const phases = getPhases();
   return phases.map((p) => ({ phase: p.slug }));

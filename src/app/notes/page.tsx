@@ -4,8 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { getPhases, getNotesByPhase } from "@/lib/content";
 
 export const metadata = {
-  title: "Notes",
-  description: "Browse all JavaScript learning notes organized by phase",
+  title: "Notes — JavaScript Mastery",
+  description:
+    "Browse all JavaScript learning notes organized by 10 phases — from language foundations through async patterns, DOM APIs, and TypeScript. 64 topics, 200+ concepts.",
+  openGraph: {
+    title: "JavaScript Mastery Notes | DevScribe",
+    description:
+      "Structured JavaScript learning notes in 10 phases. Deep-dive coverage of every concept from variables to metaprogramming.",
+  },
 };
 
 export default function NotesPage() {

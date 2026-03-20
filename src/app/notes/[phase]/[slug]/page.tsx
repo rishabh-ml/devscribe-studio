@@ -27,9 +27,24 @@ export async function generateMetadata({ params }: NotePageProps) {
   const result = getNoteContent(phase, slug);
   if (!result) return {};
 
+  const { title, tags, phase: phaseNum } = result.frontmatter;
+  const tagStr = tags?.slice(0, 5).join(", ") || "";
+  const description = `Deep-dive JavaScript notes on ${title}. Phase ${phaseNum} — covers ${tagStr}. Structured for progressive mastery.`;
+
   return {
-    title: result.frontmatter.title,
-    description: `JavaScript notes — ${result.frontmatter.title}`,
+    title,
+    description,
+    openGraph: {
+      title: `${title} | DevScribe`,
+      description,
+      type: "article",
+      tags: tags,
+    },
+    twitter: {
+      card: "summary",
+      title: `${title} | DevScribe`,
+      description,
+    },
   };
 }
 
@@ -52,8 +67,26 @@ export default async function NotePage({ params }: NotePageProps) {
     readingTime: readingTime(content).text,
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: frontmatter.title,
+    description: `JavaScript notes on ${frontmatter.title}`,
+    datePublished: frontmatter.created,
+    author: { "@type": "Organization", name: "DevScribe" },
+    publisher: { "@type": "Organization", name: "DevScribe" },
+    keywords: frontmatter.tags?.join(", "),
+    articleSection: `Phase ${frontmatter.phase}`,
+    url: `https://devscribe.studio/notes/${phase}/${slug}`,
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Back nav */}
       <Link href={`/notes/${phase}`}>
         <Button variant="ghost" size="sm" className="mb-8 gap-1.5 text-muted-foreground hover:text-foreground">
