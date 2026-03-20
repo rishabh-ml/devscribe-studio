@@ -36,13 +36,13 @@ export function Footer() {
                   href="/notes"
                   className="text-sm text-muted-foreground transition-colors hover:text-accent"
                 >
-                  All Notes
+                  All Subjects
                 </Link>
                 <Link
-                  href="/notes/phase-1-language-foundations/01-phase-1-overview"
+                  href="/notes/javascript"
                   className="text-sm text-muted-foreground transition-colors hover:text-accent"
                 >
-                  Start Phase 1
+                  JavaScript
                 </Link>
               </nav>
             </div>

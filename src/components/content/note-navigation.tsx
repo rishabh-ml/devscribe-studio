@@ -5,10 +5,16 @@ import type { NoteMetadata } from "@/lib/content";
 interface NoteNavigationProps {
   prev: NoteMetadata | null;
   next: NoteMetadata | null;
+  subject?: string;
 }
 
-export function NoteNavigation({ prev, next }: NoteNavigationProps) {
+export function NoteNavigation({ prev, next, subject }: NoteNavigationProps) {
   if (!prev && !next) return null;
+
+  const buildHref = (note: NoteMetadata) => {
+    const sub = subject || note.subject || "javascript";
+    return `/notes/${sub}/${note.phaseSlug}/${note.slug}`;
+  };
 
   return (
     <nav className="relative mt-16 flex items-stretch gap-4 pt-8">
@@ -17,7 +23,7 @@ export function NoteNavigation({ prev, next }: NoteNavigationProps) {
 
       {prev ? (
         <Link
-          href={`/notes/${prev.phaseSlug}/${prev.slug}`}
+          href={buildHref(prev)}
           className="group flex flex-1 flex-col rounded-xl border border-border bg-surface p-4 transition-all hover:border-accent/30 hover:shadow-sm hover:shadow-accent-glow"
         >
           <span className="mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -33,7 +39,7 @@ export function NoteNavigation({ prev, next }: NoteNavigationProps) {
       )}
       {next ? (
         <Link
-          href={`/notes/${next.phaseSlug}/${next.slug}`}
+          href={buildHref(next)}
           className="group flex flex-1 flex-col items-end rounded-xl border border-border bg-surface p-4 text-right transition-all hover:border-accent/30 hover:shadow-sm hover:shadow-accent-glow"
         >
           <span className="mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">

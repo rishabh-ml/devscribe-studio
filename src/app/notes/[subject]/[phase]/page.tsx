@@ -4,40 +4,52 @@ import { ArrowLeft, Clock, ChevronRight, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getNotesByPhase, getPhases } from "@/lib/content";
+import { getAvailableSubjects, getSubject } from "@/lib/subjects";
 
 interface PhasePageProps {
-  params: Promise<{ phase: string }>;
+  params: Promise<{ subject: string; phase: string }>;
+}
+
+export async function generateStaticParams() {
+  const subjects = getAvailableSubjects();
+  const params: { subject: string; phase: string }[] = [];
+
+  for (const s of subjects) {
+    const phases = getPhases(s.slug);
+    for (const p of phases) {
+      params.push({ subject: s.slug, phase: p.slug });
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({ params }: PhasePageProps) {
-  const { phase: phaseSlug } = await params;
-  const notes = getNotesByPhase(phaseSlug);
-  if (notes.length === 0) return {};
+  const { subject: subjectSlug, phase: phaseSlug } = await params;
+  const subject = getSubject(subjectSlug);
+  const notes = getNotesByPhase(phaseSlug, subjectSlug);
+  if (!subject || notes.length === 0) return {};
 
   const overview = notes.find((n) => n.slug.includes("overview"));
   const phaseNumber = notes[0].phase;
   const title = overview?.title || `Phase ${phaseNumber}`;
 
   return {
-    title,
-    description: `Phase ${phaseNumber} of JavaScript mastery: ${title}. ${notes.length} in-depth notes covering ${notes.map((n) => n.title).slice(1, 4).join(", ")}${notes.length > 4 ? ", and more" : ""}.`,
+    title: `${title} — ${subject.name}`,
+    description: `Phase ${phaseNumber} of ${subject.name} mastery: ${title}. ${notes.length} in-depth notes covering ${notes.map((n) => n.title).slice(1, 4).join(", ")}${notes.length > 4 ? ", and more" : ""}.`,
     openGraph: {
-      title: `${title} | DevScribe`,
-      description: `Phase ${phaseNumber}: ${notes.length} structured notes for deep JavaScript learning.`,
+      title: `${title} | ${subject.name} | DevScribe`,
+      description: `Phase ${phaseNumber}: ${notes.length} structured ${subject.name} notes.`,
     },
   };
 }
 
-export async function generateStaticParams() {
-  const phases = getPhases();
-  return phases.map((p) => ({ phase: p.slug }));
-}
-
 export default async function PhasePage({ params }: PhasePageProps) {
-  const { phase: phaseSlug } = await params;
-  const notes = getNotesByPhase(phaseSlug);
+  const { subject: subjectSlug, phase: phaseSlug } = await params;
+  const subject = getSubject(subjectSlug);
+  const notes = getNotesByPhase(phaseSlug, subjectSlug);
 
-  if (notes.length === 0) {
+  if (!subject || notes.length === 0) {
     notFound();
   }
 
@@ -47,10 +59,10 @@ export default async function PhasePage({ params }: PhasePageProps) {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
       {/* Back */}
-      <Link href="/notes">
+      <Link href={`/notes/${subjectSlug}`}>
         <Button variant="ghost" size="sm" className="mb-8 gap-1.5 text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-3 w-3" />
-          All Notes
+          {subject.name} Notes
         </Button>
       </Link>
 
@@ -76,7 +88,7 @@ export default async function PhasePage({ params }: PhasePageProps) {
         {notes.map((note, i) => (
           <Link
             key={note.slug}
-            href={`/notes/${note.phaseSlug}/${note.slug}`}
+            href={`/notes/${subjectSlug}/${note.phaseSlug}/${note.slug}`}
             className="group flex items-center gap-4 rounded-xl border border-transparent p-4 transition-all hover:border-border hover:bg-surface"
           >
             {/* Index number */}

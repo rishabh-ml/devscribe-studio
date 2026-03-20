@@ -17,6 +17,7 @@ export interface NoteFrontmatter {
 export interface NoteMetadata extends NoteFrontmatter {
   slug: string;
   phaseSlug: string;
+  subject: string;
   readingTime: string;
 }
 
@@ -69,6 +70,7 @@ export function getAllNotes(subject = "javascript"): NoteMetadata[] {
         ...fm,
         slug: slugify(file.replace(/\.md$/, "")),
         phaseSlug: phaseInfo.slug,
+        subject,
         readingTime: readingTime(content).text,
       });
     }

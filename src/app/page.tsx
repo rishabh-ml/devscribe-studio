@@ -14,6 +14,7 @@ import {
   Terminal,
   Layers,
   Sparkles,
+  Code,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +30,7 @@ const contentTypes = [
   {
     icon: FileText,
     title: "Structured Notes",
-    description: "Obsidian-style MDX notes organized by learning phases",
+    description: "Obsidian-style notes organized by learning phases",
     available: true,
     color: "text-amber-500",
     bg: "bg-amber-500/10",
@@ -76,23 +77,17 @@ const contentTypes = [
   },
 ];
 
-const phases = [
-  { number: 1, title: "Language Foundations", topics: 8, weeks: "1–3" },
-  { number: 2, title: "Control Flow & Data Structures", topics: 7, weeks: "4–6" },
-  { number: 3, title: "Functions, Scope & Closures", topics: 8, weeks: "7–9" },
-  { number: 4, title: "this, Prototypes & OOP", topics: 5, weeks: "10–11" },
-  { number: 5, title: "Async JavaScript", topics: 5, weeks: "12–13" },
-  { number: 6, title: "DOM, Events & Browser APIs", topics: 10, weeks: "14–17" },
-  { number: 7, title: "Modules & Modern Features", topics: 6, weeks: "18–19" },
-  { number: 8, title: "Advanced Patterns", topics: 5, weeks: "20–21" },
-  { number: 9, title: "Testing & Performance", topics: 4, weeks: "22–23" },
-  { number: 10, title: "TypeScript & Ecosystem", topics: 6, weeks: "24–26" },
+const subjects = [
+  { slug: "javascript", name: "JavaScript", icon: Terminal, color: "text-amber-500", bg: "bg-amber-500/10", phases: 10, notes: 76, available: true },
+  { slug: "typescript", name: "TypeScript", icon: Code, color: "text-sky-400", bg: "bg-sky-400/10", phases: 0, notes: 0, available: false },
+  { slug: "python", name: "Python", icon: Code, color: "text-emerald-400", bg: "bg-emerald-400/10", phases: 0, notes: 0, available: false },
+  { slug: "react", name: "React", icon: Code, color: "text-cyan-400", bg: "bg-cyan-400/10", phases: 0, notes: 0, available: false },
 ];
 
 const stats = [
-  { label: "Phases", value: "10" },
-  { label: "Topics", value: "64" },
-  { label: "Notes", value: "85" },
+  { label: "Subjects", value: "6" },
+  { label: "Phases", value: "10+" },
+  { label: "Notes", value: "76" },
   { label: "Concepts", value: "200+" },
 ];
 
@@ -125,7 +120,7 @@ export default function HomePage() {
               variants={heroReveal}
               className="mb-6 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-7xl"
             >
-              Learn JavaScript.{" "}
+              Learn to Code.{" "}
               <span className="gradient-text">Deeply.</span>
             </motion.h1>
 
@@ -133,9 +128,9 @@ export default function HomePage() {
               variants={heroReveal}
               className="mb-10 max-w-2xl font-serif text-lg leading-relaxed text-muted-foreground sm:text-xl"
             >
-              A structured knowledge base covering 10 phases, 64 topics, and 200+
-              concepts — organized for progressive mastery from fundamentals
-              through engine internals and metaprogramming.
+              A structured knowledge base for developers — organized by subject
+              and learning phase for progressive mastery from fundamentals
+              through advanced patterns and real-world practice.
             </motion.p>
 
             <motion.div
@@ -145,12 +140,12 @@ export default function HomePage() {
               <Link href="/notes">
                 <Button variant="glow" size="lg" className="gap-2">
                   <BookOpen className="h-4 w-4" />
-                  Browse Notes
+                  Browse Subjects
                 </Button>
               </Link>
-              <Link href="/notes/phase-1-language-foundations/01-phase-1-overview">
+              <Link href="/notes/javascript">
                 <Button variant="outline" size="lg" className="gap-2">
-                  Start Phase 1
+                  Start JavaScript
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
@@ -177,6 +172,82 @@ export default function HomePage() {
 
         {/* Bottom fade */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      </section>
+
+      {/* ─── Subjects ──────────────────────────── */}
+      <section className="relative mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={staggerContainer}
+        >
+          <motion.div variants={fadeInUp} className="mb-10">
+            <div className="mb-2 flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-accent" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-accent">
+                Subjects
+              </span>
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Pick your path
+            </h2>
+            <p className="mt-2 max-w-lg text-muted-foreground">
+              Deep-dive notes across multiple programming languages and
+              technologies — each structured for progressive mastery.
+            </p>
+          </motion.div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {subjects.map((subject) => (
+              <motion.div
+                key={subject.slug}
+                variants={fadeInUp}
+                whileHover={subject.available ? "hover" : undefined}
+                initial="rest"
+              >
+                <motion.div variants={subject.available ? cardHover : undefined}>
+                  {subject.available ? (
+                    <Link
+                      href={`/notes/${subject.slug}`}
+                      className="group flex h-full flex-col rounded-xl border border-border bg-surface p-5 transition-colors hover:border-accent/30"
+                    >
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${subject.bg}`}>
+                          <subject.icon className={`h-5 w-5 ${subject.color}`} />
+                        </div>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground/40 transition-all group-hover:translate-x-0.5 group-hover:text-accent" />
+                      </div>
+                      <h3 className="mb-1 font-semibold transition-colors group-hover:text-accent">
+                        {subject.name}
+                      </h3>
+                      <div className="mt-auto flex items-center gap-2 pt-3">
+                        <Badge variant="default" className="text-[10px]">
+                          {subject.phases} phases
+                        </Badge>
+                        <Badge variant="secondary" className="text-[10px]">
+                          {subject.notes} notes
+                        </Badge>
+                      </div>
+                    </Link>
+                  ) : (
+                    <div className="flex h-full flex-col rounded-xl border border-border/60 bg-surface/50 p-5 opacity-50">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${subject.bg}`}>
+                          <subject.icon className={`h-5 w-5 ${subject.color}`} />
+                        </div>
+                        <Badge variant="secondary" className="text-[10px]">
+                          Soon
+                        </Badge>
+                      </div>
+                      <h3 className="font-semibold">{subject.name}</h3>
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
       {/* ─── Code Decoration ──────────────────── */}
@@ -209,16 +280,17 @@ export default function HomePage() {
               <span className="text-amber-400">{"{"}</span>
             </div>
             <div className="pl-6">
-              <span className="text-emerald-400">phases</span>
+              <span className="text-emerald-400">subjects</span>
               <span className="text-muted-foreground">:</span>{" "}
-              <span className="text-amber-300">10</span>
-              <span className="text-muted-foreground">,</span>
-            </div>
-            <div className="pl-6">
-              <span className="text-emerald-400">topics</span>
-              <span className="text-muted-foreground">:</span>{" "}
-              <span className="text-amber-300">64</span>
-              <span className="text-muted-foreground">,</span>
+              <span className="text-muted-foreground">[</span>
+              <span className="text-orange-300">&quot;js&quot;</span>
+              <span className="text-muted-foreground">,</span>{" "}
+              <span className="text-orange-300">&quot;ts&quot;</span>
+              <span className="text-muted-foreground">,</span>{" "}
+              <span className="text-orange-300">&quot;py&quot;</span>
+              <span className="text-muted-foreground">,</span>{" "}
+              <span className="text-orange-300">&quot;...&quot;</span>
+              <span className="text-muted-foreground">],</span>
             </div>
             <div className="pl-6">
               <span className="text-emerald-400">style</span>
@@ -244,7 +316,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── Content Types ────────────────────── */}
-      <section className="relative mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+      <section className="relative mx-auto max-w-6xl px-4 pb-28 sm:px-6">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -299,84 +371,6 @@ export default function HomePage() {
                 </motion.div>
               </motion.div>
             ))}
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ─── Phase Timeline ───────────────────── */}
-      <section className="relative mx-auto max-w-6xl px-4 pb-28 sm:px-6">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          variants={staggerContainerSlow}
-        >
-          <motion.div variants={fadeInUp} className="mb-10">
-            <div className="mb-2 flex items-center gap-2">
-              <Terminal className="h-4 w-4 text-accent" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-accent">
-                JavaScript Mastery
-              </span>
-            </div>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              10 phases to mastery
-            </h2>
-            <p className="mt-2 max-w-lg text-muted-foreground">
-              From variable declarations to metaprogramming — a structured path through
-              every corner of the language.
-            </p>
-          </motion.div>
-
-          {/* Phase grid with connecting line */}
-          <div className="relative">
-            {/* Vertical connecting line (desktop) */}
-            <div className="absolute left-[19px] top-4 hidden h-[calc(100%-32px)] w-px bg-gradient-to-b from-accent/40 via-accent/20 to-transparent lg:block" />
-
-            <div className="space-y-3">
-              {phases.map((phase, i) => (
-                <motion.div key={phase.number} variants={fadeInUp}>
-                  <Link
-                    href={`/notes/phase-${phase.number}-${phase.title
-                      .toLowerCase()
-                      .replace(/[^a-z0-9]+/g, "-")
-                      .replace(/^-|-$/g, "")}`}
-                    className="group block"
-                  >
-                    <div className="flex items-start gap-4 rounded-xl border border-transparent p-3 transition-all hover:border-border hover:bg-surface lg:gap-6">
-                      {/* Phase number */}
-                      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-muted font-mono text-sm font-bold text-muted-foreground transition-all group-hover:border-accent/50 group-hover:bg-accent/10 group-hover:text-accent group-hover:shadow-sm group-hover:shadow-accent-glow">
-                        {String(phase.number).padStart(2, "0")}
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 pt-0.5">
-                        <div className="flex items-baseline gap-3">
-                          <h3 className="font-semibold transition-colors group-hover:text-accent">
-                            {phase.title}
-                          </h3>
-                          <span className="hidden text-xs text-muted-foreground sm:inline">
-                            Weeks {phase.weeks}
-                          </span>
-                        </div>
-                        <div className="mt-1 flex items-center gap-3">
-                          <span className="text-xs text-muted-foreground">
-                            {phase.topics} topics
-                          </span>
-                          {i === 0 && (
-                            <Badge variant="success" className="text-[10px]">
-                              Start here
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Arrow */}
-                      <ArrowRight className="mt-2.5 h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-all group-hover:translate-x-1 group-hover:text-accent group-hover:opacity-100" />
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
           </div>
         </motion.div>
       </section>
