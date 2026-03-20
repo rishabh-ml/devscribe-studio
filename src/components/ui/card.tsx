@@ -6,7 +6,7 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        "rounded-xl border border-border bg-surface p-6 transition-colors",
+        "rounded-xl border border-border bg-surface transition-all duration-300",
         className
       )}
       {...props}
@@ -17,7 +17,7 @@ Card.displayName = "Card";
 
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("mb-4", className)} {...props} />
+    <div ref={ref} className={cn("p-6 pb-0", className)} {...props} />
   )
 );
 CardHeader.displayName = "CardHeader";
@@ -48,7 +48,7 @@ CardDescription.displayName = "CardDescription";
 
 const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("", className)} {...props} />
+    <div ref={ref} className={cn("p-6", className)} {...props} />
   )
 );
 CardContent.displayName = "CardContent";

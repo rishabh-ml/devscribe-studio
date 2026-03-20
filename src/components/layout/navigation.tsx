@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { BookOpen, Menu, X, Code2, Home } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { BookOpen, Menu, X, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { href: "/", label: "Home", icon: Home },
+  { href: "/", label: "Home" },
   { href: "/notes", label: "Notes", icon: BookOpen },
 ];
 
@@ -17,13 +17,16 @@ export function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2.5 font-semibold">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-            <Code2 className="h-4 w-4" />
+    <header className="glass sticky top-0 z-50 border-b border-border/50">
+      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+        {/* Logo */}
+        <Link href="/" className="group flex items-center gap-2.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent shadow-sm shadow-accent-glow transition-shadow group-hover:shadow-md group-hover:shadow-accent-glow">
+            <Zap className="h-3.5 w-3.5 text-accent-foreground" />
           </div>
-          <span className="text-lg tracking-tight">DevScribe</span>
+          <span className="text-base font-semibold tracking-tight">
+            Dev<span className="text-accent">Scribe</span>
+          </span>
         </Link>
 
         {/* Desktop nav */}
@@ -32,62 +35,79 @@ export function Navigation() {
             const isActive =
               href === "/" ? pathname === "/" : pathname.startsWith(href);
             return (
-              <Link key={href} href={href}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn(
-                    "gap-1.5",
-                    isActive && "bg-muted text-foreground"
-                  )}
-                >
-                  <Icon className="h-4 w-4" />
-                  {label}
-                </Button>
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                  isActive
+                    ? "text-accent"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {Icon && <Icon className="h-3.5 w-3.5" />}
+                {label}
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-indicator"
+                    className="absolute inset-x-1 -bottom-[13px] h-[2px] bg-accent"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  />
+                )}
               </Link>
             );
           })}
         </div>
 
         {/* Mobile toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="sm:hidden"
+        <button
+          className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
           {mobileOpen ? (
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           ) : (
-            <Menu className="h-5 w-5" />
+            <Menu className="h-4 w-4" />
           )}
-        </Button>
+        </button>
       </nav>
 
       {/* Mobile nav */}
-      {mobileOpen && (
-        <div className="border-t border-border px-4 py-3 sm:hidden">
-          {navLinks.map(({ href, label, icon: Icon }) => {
-            const isActive =
-              href === "/" ? pathname === "/" : pathname.startsWith(href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
-                className={cn(
-                  "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted",
-                  isActive && "bg-muted text-foreground"
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </Link>
-            );
-          })}
-        </div>
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden border-t border-border/50 sm:hidden"
+          >
+            <div className="px-4 py-3 space-y-1">
+              {navLinks.map(({ href, label, icon: Icon }) => {
+                const isActive =
+                  href === "/" ? pathname === "/" : pathname.startsWith(href);
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-accent/10 text-accent"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    {Icon && <Icon className="h-4 w-4" />}
+                    {label}
+                  </Link>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

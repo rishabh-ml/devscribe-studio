@@ -4,14 +4,17 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
   {
     variants: {
       variant: {
-        default: "bg-accent text-accent-foreground hover:bg-accent/90",
-        outline: "border border-border bg-transparent hover:bg-muted",
+        default:
+          "bg-accent text-accent-foreground shadow-sm hover:bg-accent/90 hover:shadow-md hover:shadow-accent-glow",
+        outline:
+          "border border-border bg-transparent hover:bg-muted hover:border-accent/50",
         ghost: "hover:bg-muted",
         link: "text-accent underline-offset-4 hover:underline",
+        glow: "bg-accent text-accent-foreground shadow-md shadow-accent-glow hover:shadow-lg hover:shadow-accent-glow",
       },
       size: {
         sm: "h-8 px-3 text-sm",

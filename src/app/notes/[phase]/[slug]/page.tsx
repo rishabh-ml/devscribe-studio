@@ -53,9 +53,10 @@ export default async function NotePage({ params }: NotePageProps) {
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+      {/* Back nav */}
       <Link href={`/notes/${phase}`}>
-        <Button variant="ghost" size="sm" className="mb-6 gap-1">
+        <Button variant="ghost" size="sm" className="mb-8 gap-1.5 text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-3 w-3" />
           Phase {frontmatter.phase}
         </Button>

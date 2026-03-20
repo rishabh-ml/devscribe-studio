@@ -8,18 +8,23 @@ interface NoteHeaderProps {
 
 export function NoteHeader({ note }: NoteHeaderProps) {
   return (
-    <div className="mb-8 border-b border-border pb-8">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <Badge>Phase {note.phase}</Badge>
+    <div className="mb-10 border-b border-border pb-8">
+      {/* Badges */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <Badge variant="glow">Phase {note.phase}</Badge>
         {note.tags?.slice(0, 4).map((tag) => (
           <Badge key={tag} variant="secondary">
             {tag}
           </Badge>
         ))}
       </div>
-      <h1 className="mb-3 text-3xl font-bold tracking-tight sm:text-4xl">
+
+      {/* Title */}
+      <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]">
         {note.title}
       </h1>
+
+      {/* Meta */}
       <div className="flex items-center gap-4 text-sm text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <Clock className="h-3.5 w-3.5" />
