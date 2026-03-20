@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { MdxContent } from "@/components/content/mdx-content";
 import { NoteHeader } from "@/components/content/note-header";
 import { NoteNavigation } from "@/components/content/note-navigation";
+import { TableOfContents } from "@/components/content/table-of-contents";
+import { ReadingProgress } from "@/components/content/reading-progress";
+import { CopyCodeInjector } from "@/components/content/copy-button";
+import { Breadcrumbs } from "@/components/content/breadcrumbs";
 import {
   getAllNotes,
   getNoteContent,
@@ -94,26 +98,40 @@ export default async function NotePage({ params }: NotePageProps) {
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <>
+      <ReadingProgress />
+      <CopyCodeInjector />
 
-      {/* Back nav */}
-      <Link href={`/notes/${subjectSlug}/${phase}`}>
-        <Button variant="ghost" size="sm" className="mb-8 gap-1.5 text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-3 w-3" />
-          Phase {frontmatter.phase}
-        </Button>
-      </Link>
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
 
-      <article>
-        <NoteHeader note={noteMetadata} />
-        <MdxContent source={processedContent} />
-      </article>
+        <div className="flex gap-10">
+          {/* Main content */}
+          <div className="min-w-0 max-w-3xl flex-1">
+            <Breadcrumbs
+              items={[
+                { label: "Notes", href: "/notes" },
+                { label: subject.name, href: `/notes/${subjectSlug}` },
+                { label: `Phase ${frontmatter.phase}`, href: `/notes/${subjectSlug}/${phase}` },
+                { label: frontmatter.title, href: `/notes/${subjectSlug}/${phase}/${slug}` },
+              ]}
+            />
 
-      <NoteNavigation prev={prev} next={next} subject={subjectSlug} />
-    </div>
+            <article>
+              <NoteHeader note={noteMetadata} />
+              <MdxContent source={processedContent} />
+            </article>
+
+            <NoteNavigation prev={prev} next={next} subject={subjectSlug} />
+          </div>
+
+          {/* Table of Contents sidebar */}
+          <TableOfContents />
+        </div>
+      </div>
+    </>
   );
 }

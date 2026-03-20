@@ -82,12 +82,12 @@ function processCallouts(content: string): string {
       const displayTitle = title || type.charAt(0).toUpperCase() + type.slice(1);
       const body = bodyLines.join("\n").trim();
 
-      output.push(`<div class="callout callout-${cssType}">`);
+      output.push(`<div className="callout callout-${cssType}">`);
       output.push(
-        `<div class="callout-title">${icon} ${displayTitle}</div>`
+        `<div className="callout-title">${icon} ${displayTitle}</div>`
       );
       if (body) {
-        output.push(`<div class="callout-body">\n\n${body}\n\n</div>`);
+        output.push(`<div className="callout-body">\n\n${body}\n\n</div>`);
       }
       output.push(`</div>`);
       output.push("");

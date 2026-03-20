@@ -6,6 +6,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Menu, X, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -59,18 +60,21 @@ export function Navigation() {
           })}
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
+        {/* Right side: theme toggle + mobile toggle */}
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
           {mobileOpen ? (
             <X className="h-4 w-4" />
           ) : (
             <Menu className="h-4 w-4" />
           )}
-        </button>
+          </button>
+        </div>
       </nav>
 
       {/* Mobile nav */}
